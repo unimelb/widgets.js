@@ -30,7 +30,7 @@ Options
 
 
 
-template (default: '<a href="{link}">{title}</a>')
+### template (default: '<a href="{link}">{title}</a>')
 
 String to use as template for rendering entries into li tags. 
 Uses a simple variable interpolation scheme allowing variables to be replaced with entry properties in the form {name}.
@@ -45,17 +45,17 @@ Entry Fields:
 
 
 
-numberOfItems (default: 5)
+### numberOfItems (default: 5)
 
 Controls the number of items to display
 
 
-listItemClass
+### listItemClass
 
 Adds a class to the li tags created by the new entries.
 
 
-onComplete
+### onComplete
 
 Callback function triggered when the list has finished being created. 
 
@@ -70,7 +70,7 @@ To add a class to the first li item in the list:
     }
 
 
-renderer 
+### renderer 
 
 Function to custom render an individual entry. 
 Is passed an entry and the default html used to display the entry - the current template interpolated with entry values.
@@ -88,18 +88,18 @@ To take an image from the entry content and use that in our rendered list:
 
 
 
-Sample:
+### Sample:
 
-var opts = {
-  listItemClass: "className",
-  template: '<a href="{link}"><img class="col-1 first" src="{img}" />{title}</a>',
-  numberOfItems: 4,
-  renderer: function(entry, _default) {  
-    var img = $(entry.content).filter("img").attr("src");
-    html = _default.replace(/{img}/, img)       
-    return html;
-  },
-  onComplete: function() {
-    $("#from_the_studio li:first").addClass("first");
-  }
-};
+  var opts = {
+    listItemClass: "className",
+    template: '<a href="{link}"><img class="col-1 first" src="{img}" />{title}</a>',
+    numberOfItems: 4,
+    renderer: function(entry, _default) {  
+      var img = $(entry.content).filter("img").attr("src");
+      html = _default.replace(/{img}/, img)       
+      return html;
+    },
+    onComplete: function() {
+      $("#from_the_studio li:first").addClass("first");
+    }
+  };
