@@ -1,19 +1,51 @@
+(function($){
+  var loaded;
 
-$.fn.extend({
-  displayRSS: function(urls, opts) {      
-    if(!opts) {
-      opts = {}
-    }
-    
-    var _f = Feedinator(this, urls, opts);    
-    google.setOnLoadCallback(_f.init);
-    return this;
+  function onLoad() {    
+    loaded = true;
   }
-});
+  
+  if (!google.feeds) {
+    google.setOnLoadCallback(onLoad);
+    google.load("feeds", "1");
+    
+  }
+  
+  
+  console.log("START");
+  
+  $.fn.displayRSS = function(urls, opts) {     
+      if(!opts) {
+        opts = {}
+      }
+      
+      var $this = $(this);
+      
+      var onLoad = function() {
+
+        if (google) {
+
+          clearInterval(loadInterval);  
+          var _f = Feedinator($this, urls, opts);
+          _f.init();  
+        }
+      }
+      var loadInterval = setInterval(onLoad, 500);
+          
+      // var _f = Feedinator(this, urls, opts);
+      // google.setOnLoadCallback(_f.init);
+           
+      return $this;      
+  }
+
+})(jQuery);
+
 
 
 var Feedinator = function(element, urls, opts) {
 
+  console.log(element);
+  
   var data = [];
   var loadCount = 0;
   var interval;
@@ -42,8 +74,6 @@ var Feedinator = function(element, urls, opts) {
 		var html = template.replace(/{link}/, entry.link);
 		html = html.replace(/{title}/, entry.title)
     
-    var img = entry.description;
-    
     try {
       var publishedDate = new Date(Date.parse(entry.publishedDate));
       html = html.replace(/{publishedDate}/, entry.publishedDate);
@@ -55,7 +85,7 @@ var Feedinator = function(element, urls, opts) {
   
   
   var load = function() {
-    $.each(urls, function(index, url) {      
+    $.each(urls, function(index, url) {          
       var feed = new google.feeds.Feed(url);
       feed.load(function(result) {
         if (!result.error) {
@@ -91,8 +121,10 @@ var Feedinator = function(element, urls, opts) {
     if (opts.renderer) {
       html = opts.renderer(entry, html);
     }
-    
+    console.log(html);
+    console.log($(element));
     $(element).append( $('<li>').addClass(listItemClass).append(html) );
+    // $(element).append( $('<li>') );
   }
   
   var sortByPublishedDate = function(count) {
@@ -104,6 +136,7 @@ var Feedinator = function(element, urls, opts) {
     
   return {
     init: function() {
+      console.log("init")
       if (typeof urls == "string") {
         urls = [urls]
       }
