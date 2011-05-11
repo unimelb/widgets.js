@@ -50,12 +50,13 @@ String to use as template for rendering entries into li tags.
 Uses a simple variable interpolation scheme allowing variables to be replaced with entry properties in the form {name}.
 
 Entry Fields:
-  title
-  publishedDate
-  content
-  author
-  categories
-  link
+
+* title
+* publishedDate
+* content
+* author
+* categories
+* link
 
 
 
@@ -67,6 +68,27 @@ Controls the number of items to display
 ### listItemClass
 
 Adds a class to the li tags created by the new entries.
+
+### dateFormat
+
+Allows customisation of the publishedDate display format.
+
+Specify a date format mask using the following examples:
+
+    "default":      "ddd mmm dd yyyy HH:MM:ss",
+    shortDate:      "m/d/yy",
+    mediumDate:     "mmm d, yyyy",
+    longDate:       "mmmm d, yyyy",
+    fullDate:       "dddd, mmmm d, yyyy",
+    shortTime:      "h:MM TT",
+    mediumTime:     "h:MM:ss TT",
+    longTime:       "h:MM:ss TT Z",
+    isoDate:        "yyyy-mm-dd",
+    isoTime:        "HH:MM:ss",
+    isoDateTime:    "yyyy-mm-dd'T'HH:MM:ss",
+    isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"
+	
+	
 
 
 ### onComplete
