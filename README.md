@@ -17,14 +17,14 @@ See /examples for full usage details
 
 Usage 
 -----------------------
-  <ul id="feed"></ul>
+    <ul id="feed"></ul>
 
-  <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAibVVzsEEnE8IwCs9tzyIfxRDUIAO2r_QCp2emLH7u6hVxhT6NxSvq2xH_P__wq2OJo7epHUGh17NIg"></script>
-  <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.min.js"></script>
-  <script type="text/javascript" src="../feed.js"></script>    
-  <script type="text/javascript">
-    $("#feed").displayRSS("http://newsroom.melbourne.edu/studio/rss");             
-  </script>
+    <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAibVVzsEEnE8IwCs9tzyIfxRDUIAO2r_QCp2emLH7u6hVxhT6NxSvq2xH_P__wq2OJo7epHUGh17NIg"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.min.js"></script>
+    <script type="text/javascript" src="../feed.js"></script>    
+    <script type="text/javascript">
+      $("#feed").displayRSS("http://newsroom.melbourne.edu/studio/rss");             
+    </script>
 
 Note: the library assumes that the entries will be rendered in a list 
 
