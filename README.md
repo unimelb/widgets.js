@@ -100,20 +100,3 @@ To take an image from the entry content and use that in our rendered list:
       return html;
     }
 
-
-
-### Sample:
-
-  var opts = {
-    listItemClass: "className",
-    template: '<a href="{link}"><img class="col-1 first" src="{img}" />{title}</a>',
-    numberOfItems: 4,
-    renderer: function(entry, _default) {  
-      var img = $(entry.content).filter("img").attr("src");
-      html = _default.replace(/{img}/, img)       
-      return html;
-    },
-    onComplete: function() {
-      $("#from_the_studio li:first").addClass("first");
-    }
-  };

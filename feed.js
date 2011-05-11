@@ -76,6 +76,7 @@ var Feedinator = function(element, urls, opts) {
       var publishedDate = new Date(Date.parse(entry.publishedDate));
       html = html.replace(/{publishedDate}/, entry.publishedDate);
     } catch(ex) {      
+      console.log(ex);
 		  html = html.replace(/{publishedDate}/, "");
     }   
     return html; 
@@ -85,6 +86,7 @@ var Feedinator = function(element, urls, opts) {
   var load = function() {
     $.each(urls, function(index, url) {          
       var feed = new google.feeds.Feed(url);
+      feed.setNumEntries(numberOfItems);
       feed.load(function(result) {
         if (!result.error) {
           data = data.concat(result.feed.entries);
@@ -119,10 +121,7 @@ var Feedinator = function(element, urls, opts) {
     if (opts.renderer) {
       html = opts.renderer(entry, html);
     }
-    console.log(html);
-    console.log($(element));
     $(element).append( $('<li>').addClass(listItemClass).append(html) );
-    // $(element).append( $('<li>') );
   }
   
   var sortByPublishedDate = function(count) {
