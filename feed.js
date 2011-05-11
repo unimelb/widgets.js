@@ -7,12 +7,9 @@
   
   if (!google.feeds) {
     google.setOnLoadCallback(onLoad);
-    google.load("feeds", "1");
-    
+    google.load("feeds", "1");    
   }
-  
-  
-  console.log("START");
+
   
   $.fn.displayRSS = function(urls, opts) {     
       if(!opts) {
@@ -73,6 +70,7 @@ var Feedinator = function(element, urls, opts) {
   var renderer = function(entry) {
 		var html = template.replace(/{link}/, entry.link);
 		html = html.replace(/{title}/, entry.title)
+		html = html.replace(/{content}/, entry.content)
     
     try {
       var publishedDate = new Date(Date.parse(entry.publishedDate));

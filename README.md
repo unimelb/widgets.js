@@ -3,8 +3,15 @@ Feed.JS
 
 Dependencies 
 -----------------------
-jQuery 1.5+
-Google Feed API
+* jQuery 1.5+
+* Google Feed API
+
+
+
+Examples
+-----------------------
+See /examples for full usage details
+
 
 
 
@@ -21,8 +28,17 @@ Usage
 </script>
 
 
-
 Note: the library assumes that the entries will be rendered in a list 
+
+
+Parameters
+-----------------------
+### URL or Array of URLS
+Full URL to an RSS feed, or an array of URLs
+
+
+### Options Hash 
+See below
 
 
 Options 

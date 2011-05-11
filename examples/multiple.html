@@ -6,10 +6,12 @@
   </head>
   <body class="">
 
-    <h1>Simple feed.js</h1>
-    <p>Single RSS feed with out-of-the-box features</p>
+    <h1>Multiple feed.js</h1>
+    <p>Multiple RSS feeds with out-of-the-box features</p>
+    <p>Collates entries from multiple feeds and displays the 5 most recent.</p>
     <ul id="feed">
       <li><a href="http://newsroom.melbourne.edu/studio/rss">http://newsroom.melbourne.edu/studio/rss</a></li>
+      <li><a href="http://feeds.unimelb.edu.au/melbourneuniupclose">http://feeds.unimelb.edu.au/melbourneuniupclose</a></li>
     </ul>
 
 
@@ -17,7 +19,7 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.min.js"></script>
     <script type="text/javascript" src="../feed.js"></script>    
     <script type="text/javascript">
-      $("#feed").displayRSS("http://newsroom.melbourne.edu/studio/rss");             
+      $("#feed").displayRSS(["http://newsroom.melbourne.edu/studio/rss", "http://feeds.unimelb.edu.au/melbourneuniupclose"]);             
     </script>
 
 

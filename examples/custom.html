@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>The most complicated thing that actually works - feed.js</title>
+    <style>
+    
+      ul {
+        list-style-type:none;
+        margin:0;
+      }
+      
+      li {
+        margin:0.25em;
+        margin-bottom:1em;
+        border-bottom:1px solid #CCCCCC;
+      }
+      
+      p {
+        margin:0;
+      }
+      .first {
+        background-color:#EEEEEE; 
+      }
+      
+      img {
+        display:block;
+      }
+    </style>    
+  </head>
+  <body class="">
+
+    <h1>Custom feed.js</h1>
+    <p>Multiple RSS feeds with extensive customisation</p>
+    <ul id="feed">
+      <li><a href="http://newsroom.melbourne.edu/studio/rss">http://newsroom.melbourne.edu/studio/rss</a></li>
+      <li><a href="http://feeds.unimelb.edu.au/melbourneuniupclose">http://feeds.unimelb.edu.au/melbourneuniupclose</a></li>      
+    </ul>
+
+
+    <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAibVVzsEEnE8IwCs9tzyIfxRDUIAO2r_QCp2emLH7u6hVxhT6NxSvq2xH_P__wq2OJo7epHUGh17NIg"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.min.js"></script>
+    <script type="text/javascript" src="../feed.js"></script>    
+    <script type="text/javascript">
+      var opts = {
+        listItemClass: "list-item",
+        template: '<a href="{link}"><img src="{img}" />{title}</a><p>({publishedDate})</p>',
+        numberOfItems: 11,
+        renderer: function(entry, _default) {  
+          var img = $(entry.content).filter("img").attr("src");
+          html = _default.replace(/{img}/, img)       
+          return html;
+        },
+        onComplete: function() {
+          $("#feed li:first").addClass("first");
+        }
+      };
+    
+      var urls = ["http://newsroom.melbourne.edu/studio/rss", "http://feeds.unimelb.edu.au/melbourneuniupclose"];
+      $("#feed").displayRSS(urls, opts);             
+    </script>
+
+
+  </body>
+</html>
