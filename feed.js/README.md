@@ -1,6 +1,9 @@
 Feed.JS
 =======================
 
+JQuery Plugin for displaying RSS feeds in a web page.
+
+
 Dependencies 
 -----------------------
 * jQuery 1.5+
