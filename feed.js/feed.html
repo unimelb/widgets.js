@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>feed.js</title>
+  <link rel="stylesheet" href="http://github.com/jashkenas/docco/raw/0.3.0/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>feed.js</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="err">$</span><span class="p">){</span>
+  <span class="n">var</span> <span class="n">loaded</span><span class="p">;</span>
+
+  <span class="n">function</span> <span class="n">onLoad</span><span class="p">()</span> <span class="p">{</span>    
+    <span class="n">loaded</span> <span class="o">=</span> <span class="kp">true</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">google</span><span class="o">.</span><span class="n">feeds</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">google</span><span class="o">.</span><span class="n">setOnLoadCallback</span><span class="p">(</span><span class="n">onLoad</span><span class="p">);</span>
+    <span class="n">google</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;feeds&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">);</span>    
+  <span class="p">}</span>
+
+  
+  <span class="vg">$.</span><span class="n">fn</span><span class="o">.</span><span class="n">displayRSS</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">urls</span><span class="p">,</span> <span class="n">opts</span><span class="p">)</span> <span class="p">{</span>     
+      <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">opts</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">opts</span> <span class="o">=</span> <span class="p">{}</span>
+      <span class="p">}</span>
+      
+      <span class="n">var</span> <span class="vg">$this</span> <span class="o">=</span> <span class="err">$</span><span class="p">(</span><span class="n">this</span><span class="p">);</span>
+      
+      <span class="n">var</span> <span class="n">onLoad</span> <span class="o">=</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">google</span><span class="p">)</span> <span class="p">{</span>
+
+          <span class="n">clearInterval</span><span class="p">(</span><span class="n">loadInterval</span><span class="p">);</span>  
+          <span class="n">var</span> <span class="n">_f</span> <span class="o">=</span> <span class="no">Feedinator</span><span class="p">(</span><span class="vg">$this</span><span class="p">,</span> <span class="n">urls</span><span class="p">,</span> <span class="n">opts</span><span class="p">);</span>
+          <span class="n">_f</span><span class="o">.</span><span class="n">init</span><span class="p">();</span>  
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="n">var</span> <span class="n">loadInterval</span> <span class="o">=</span> <span class="n">setInterval</span><span class="p">(</span><span class="n">onLoad</span><span class="p">,</span> <span class="mi">500</span><span class="p">);</span><span class="sr"></span>
+<span class="sr">          </span>
+<span class="sr">      // var _f = Feedinator(this, urls, opts);</span>
+<span class="sr">      /</span><span class="o">/</span> <span class="n">google</span><span class="o">.</span><span class="n">setOnLoadCallback</span><span class="p">(</span><span class="n">_f</span><span class="o">.</span><span class="n">init</span><span class="p">);</span>
+           
+      <span class="k">return</span> <span class="vg">$this</span><span class="p">;</span>      
+  <span class="p">}</span>
+
+
+  <span class="n">var</span> <span class="no">Feedinator</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">urls</span><span class="p">,</span> <span class="n">opts</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="n">var</span> <span class="n">data</span> <span class="o">=</span> <span class="o">[]</span><span class="p">;</span>
+    <span class="n">var</span> <span class="n">loadCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">var</span> <span class="n">interval</span><span class="p">;</span>
+
+    <span class="n">var</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;&lt;a href=&quot;{link}&quot;&gt;{title}&lt;/a&gt;&#39;</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">template</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">template</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">template</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">var</span> <span class="n">dateFormatMask</span> <span class="o">=</span> <span class="s1">&#39;htt dd mmmm yyyy&#39;</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">dateFormat</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">dateFormatMask</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">dateFormat</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">var</span> <span class="n">numberOfItems</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">numberOfItems</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">numberOfItems</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">numberOfItems</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">var</span> <span class="n">listItemClass</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">listItemClass</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">listItemClass</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">listItemClass</span><span class="p">;</span>
+    <span class="p">}</span>
+
+
+    <span class="n">var</span> <span class="n">renderer</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span> <span class="p">{</span>
+  		<span class="n">var</span> <span class="n">html</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sr">/{link}/</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">link</span><span class="p">);</span>
+  		<span class="n">html</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sr">/{title}/</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+  		<span class="n">html</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sr">/{content}/</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+      <span class="n">try</span> <span class="p">{</span>
+        <span class="n">var</span> <span class="n">publishedDate</span> <span class="o">=</span> <span class="kp">new</span> <span class="no">Date</span><span class="p">(</span><span class="no">Date</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">publishedDate</span><span class="p">));</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sr">/{publishedDate}/</span><span class="p">,</span> <span class="n">publishedDate</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dateFormatMask</span><span class="p">));</span>
+      <span class="p">}</span> <span class="kp">catch</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span> <span class="p">{</span>      
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">ex</span><span class="p">);</span>
+  		  <span class="n">html</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sr">/{publishedDate}/</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">);</span>
+      <span class="p">}</span>   
+      <span class="k">return</span> <span class="n">html</span><span class="p">;</span> 
+    <span class="p">}</span>
+
+
+    <span class="n">var</span> <span class="nb">load</span> <span class="o">=</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="vg">$.</span><span class="n">each</span><span class="p">(</span><span class="n">urls</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span> <span class="p">{</span>          
+        <span class="n">var</span> <span class="n">feed</span> <span class="o">=</span> <span class="kp">new</span> <span class="n">google</span><span class="o">.</span><span class="n">feeds</span><span class="o">.</span><span class="n">Feed</span><span class="p">(</span><span class="n">url</span><span class="p">);</span>
+        <span class="n">feed</span><span class="o">.</span><span class="n">setNumEntries</span><span class="p">(</span><span class="n">numberOfItems</span><span class="p">);</span>
+        <span class="n">feed</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">result</span><span class="o">.</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">feed</span><span class="o">.</span><span class="n">entries</span><span class="p">);</span>
+            <span class="n">loadCount</span><span class="o">++</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+      <span class="p">});</span>
+      <span class="n">interval</span> <span class="o">=</span> <span class="n">setInterval</span><span class="p">(</span><span class="n">onLoad</span><span class="p">,</span> <span class="mi">500</span><span class="p">);</span>     
+    <span class="p">}</span>
+
+    <span class="n">var</span> <span class="n">onLoad</span> <span class="o">=</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span> 
+      <span class="k">if</span><span class="p">(</span><span class="n">loadCount</span> <span class="o">==</span> <span class="n">urls</span><span class="o">.</span><span class="n">length</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">clearInterval</span><span class="p">(</span><span class="n">interval</span><span class="p">);</span>
+        <span class="n">entries</span> <span class="o">=</span> <span class="n">sortByPublishedDate</span><span class="p">(</span><span class="n">numberOfItems</span><span class="p">);</span>
+        <span class="nb">display</span><span class="p">(</span><span class="n">entries</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">onComplete</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">opts</span><span class="o">.</span><span class="n">onComplete</span><span class="p">();</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">var</span> <span class="nb">display</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">entries</span><span class="p">)</span> <span class="p">{</span>
+  		<span class="err">$</span><span class="p">(</span><span class="n">element</span><span class="p">)</span><span class="o">.</span><span class="n">empty</span><span class="p">();</span>
+  		<span class="vg">$.</span><span class="n">each</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">entry</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">appendEntry</span><span class="p">(</span><span class="n">entry</span><span class="p">);</span>
+  		<span class="p">});</span>		
+    <span class="p">}</span>
+
+    <span class="n">var</span> <span class="n">appendEntry</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span> <span class="p">{</span> 
+      <span class="n">var</span> <span class="n">html</span> <span class="o">=</span> <span class="n">renderer</span><span class="p">(</span><span class="n">entry</span><span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">renderer</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">renderer</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">html</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="err">$</span><span class="p">(</span><span class="n">element</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="err">$</span><span class="p">(</span><span class="s1">&#39;&lt;li&gt;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">addClass</span><span class="p">(</span><span class="n">listItemClass</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">html</span><span class="p">)</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">var</span> <span class="n">sortByPublishedDate</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="p">{</span>
+  		<span class="n">data</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">entryA</span><span class="p">,</span><span class="n">entryB</span><span class="p">){</span>
+  		  <span class="k">return</span> <span class="kp">new</span> <span class="no">Date</span><span class="p">(</span><span class="n">entryB</span><span class="o">.</span><span class="n">publishedDate</span><span class="p">)</span> <span class="o">-</span> <span class="kp">new</span> <span class="no">Date</span><span class="p">(</span><span class="n">entryA</span><span class="o">.</span><span class="n">publishedDate</span><span class="p">);</span>
+  		<span class="p">});</span>	
+  		<span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">count</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="n">init</span><span class="p">:</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">typeof</span> <span class="n">urls</span> <span class="o">==</span> <span class="s2">&quot;string&quot;</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">urls</span> <span class="o">=</span> <span class="o">[</span><span class="n">urls</span><span class="o">]</span>
+        <span class="p">}</span>
+        <span class="nb">load</span><span class="p">();</span> 
+      <span class="p">}</span>    
+    <span class="p">}</span>
+
+  <span class="p">}</span><span class="sr"></span>
+
+
+<span class="sr">  /*</span>
+<span class="sr">   * Date Format 1.2.3</span>
+<span class="sr">   * (c) 2007-2009 Steven Levithan &lt;stevenlevithan.com&gt;</span>
+<span class="sr">   * MIT license</span>
+<span class="sr">   *</span>
+<span class="sr">   * Includes enhancements by Scott Trenda &lt;scott.trenda.net&gt;</span>
+<span class="sr">   * and Kris Kowal &lt;cixar.com/</span><span class="o">~</span><span class="n">kris</span><span class="o">.</span><span class="n">kowal</span><span class="o">/&gt;</span>
+   <span class="o">*</span>
+   <span class="o">*</span> <span class="no">Accepts</span> <span class="n">a</span> <span class="n">date</span><span class="p">,</span> <span class="n">a</span> <span class="n">mask</span><span class="p">,</span> <span class="ow">or</span> <span class="n">a</span> <span class="n">date</span> <span class="ow">and</span> <span class="n">a</span> <span class="n">mask</span><span class="o">.</span>
+   <span class="o">*</span> <span class="no">Returns</span> <span class="n">a</span> <span class="n">formatted</span> <span class="n">version</span> <span class="n">of</span> <span class="n">the</span> <span class="n">given</span> <span class="n">date</span><span class="o">.</span>
+   <span class="o">*</span> <span class="no">The</span> <span class="n">date</span> <span class="n">defaults</span> <span class="n">to</span> <span class="n">the</span> <span class="n">current</span> <span class="n">date</span><span class="o">/</span><span class="n">time</span><span class="o">.</span>
+   <span class="o">*</span> <span class="no">The</span> <span class="n">mask</span> <span class="n">defaults</span> <span class="n">to</span> <span class="n">dateFormat</span><span class="o">.</span><span class="n">masks</span><span class="o">.</span><span class="n">default</span><span class="o">.</span>
+   <span class="o">*/</span>
+  <span class="n">var</span> <span class="n">dateFormat</span> <span class="o">=</span> <span class="n">function</span> <span class="p">()</span> <span class="p">{</span>
+  	<span class="n">var</span>	<span class="n">token</span> <span class="o">=</span> <span class="sr">/d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|&quot;[^&quot;]*&quot;|&#39;[^&#39;]*&#39;/</span><span class="n">g</span><span class="p">,</span>
+  		<span class="n">timezone</span> <span class="o">=</span> <span class="sr">/\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/</span><span class="n">g</span><span class="p">,</span>
+  		<span class="n">timezoneClip</span> <span class="o">=</span> <span class="sr">/[^-+\dA-Z]/</span><span class="n">g</span><span class="p">,</span>
+  		<span class="n">pad</span> <span class="o">=</span> <span class="n">function</span> <span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">len</span><span class="p">)</span> <span class="p">{</span>
+  			<span class="n">val</span> <span class="o">=</span> <span class="nb">String</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
+  			<span class="n">len</span> <span class="o">=</span> <span class="n">len</span> <span class="o">||</span> <span class="mi">2</span><span class="p">;</span>
+  			<span class="k">while</span> <span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="n">len</span><span class="p">)</span> <span class="n">val</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span> <span class="o">+</span> <span class="n">val</span><span class="p">;</span>
+  			<span class="k">return</span> <span class="n">val</span><span class="p">;</span>
+  		<span class="p">};</span><span class="sr"></span>
+
+<span class="sr">  	// Regexes and supporting functions are cached through closure</span>
+<span class="sr">  	return function (date, mask, utc) {</span>
+<span class="sr">  		var dF = dateFormat;</span>
+
+<span class="sr">  		/</span><span class="o">/</span> <span class="no">You</span> <span class="n">can</span><span class="s1">&#39;t provide utc if you skip other args (use the &quot;UTC:&quot; mask prefix)</span>
+<span class="s1">  		if (arguments.length == 1 &amp;&amp; Object.prototype.toString.call(date) == &quot;[object String]&quot; &amp;&amp; !/\d/.test(date)) {</span>
+<span class="s1">  			mask = date;</span>
+<span class="s1">  			date = undefined;</span>
+<span class="s1">  		}</span>
+
+<span class="s1">  		// Passing date through Date applies Date.parse, if necessary</span>
+<span class="s1">  		date = date ? new Date(date) : new Date;</span>
+<span class="s1">  		if (isNaN(date)) throw SyntaxError(&quot;invalid date&quot;);</span>
+
+<span class="s1">  		mask = String(dF.masks[mask] || mask || dF.masks[&quot;default&quot;]);</span>
+
+<span class="s1">  		// Allow setting the utc argument via the mask</span>
+<span class="s1">  		if (mask.slice(0, 4) == &quot;UTC:&quot;) {</span>
+<span class="s1">  			mask = mask.slice(4);</span>
+<span class="s1">  			utc = true;</span>
+<span class="s1">  		}</span>
+
+<span class="s1">  		var	_ = utc ? &quot;getUTC&quot; : &quot;get&quot;,</span>
+<span class="s1">  			d = date[_ + &quot;Date&quot;](),</span>
+<span class="s1">  			D = date[_ + &quot;Day&quot;](),</span>
+<span class="s1">  			m = date[_ + &quot;Month&quot;](),</span>
+<span class="s1">  			y = date[_ + &quot;FullYear&quot;](),</span>
+<span class="s1">  			H = date[_ + &quot;Hours&quot;](),</span>
+<span class="s1">  			M = date[_ + &quot;Minutes&quot;](),</span>
+<span class="s1">  			s = date[_ + &quot;Seconds&quot;](),</span>
+<span class="s1">  			L = date[_ + &quot;Milliseconds&quot;](),</span>
+<span class="s1">  			o = utc ? 0 : date.getTimezoneOffset(),</span>
+<span class="s1">  			flags = {</span>
+<span class="s1">  				d:    d,</span>
+<span class="s1">  				dd:   pad(d),</span>
+<span class="s1">  				ddd:  dF.i18n.dayNames[D],</span>
+<span class="s1">  				dddd: dF.i18n.dayNames[D + 7],</span>
+<span class="s1">  				m:    m + 1,</span>
+<span class="s1">  				mm:   pad(m + 1),</span>
+<span class="s1">  				mmm:  dF.i18n.monthNames[m],</span>
+<span class="s1">  				mmmm: dF.i18n.monthNames[m + 12],</span>
+<span class="s1">  				yy:   String(y).slice(2),</span>
+<span class="s1">  				yyyy: y,</span>
+<span class="s1">  				h:    H % 12 || 12,</span>
+<span class="s1">  				hh:   pad(H % 12 || 12),</span>
+<span class="s1">  				H:    H,</span>
+<span class="s1">  				HH:   pad(H),</span>
+<span class="s1">  				M:    M,</span>
+<span class="s1">  				MM:   pad(M),</span>
+<span class="s1">  				s:    s,</span>
+<span class="s1">  				ss:   pad(s),</span>
+<span class="s1">  				l:    pad(L, 3),</span>
+<span class="s1">  				L:    pad(L &gt; 99 ? Math.round(L / 10) : L),</span>
+<span class="s1">  				t:    H &lt; 12 ? &quot;a&quot;  : &quot;p&quot;,</span>
+<span class="s1">  				tt:   H &lt; 12 ? &quot;am&quot; : &quot;pm&quot;,</span>
+<span class="s1">  				T:    H &lt; 12 ? &quot;A&quot;  : &quot;P&quot;,</span>
+<span class="s1">  				TT:   H &lt; 12 ? &quot;AM&quot; : &quot;PM&quot;,</span>
+<span class="s1">  				Z:    utc ? &quot;UTC&quot; : (String(date).match(timezone) || [&quot;&quot;]).pop().replace(timezoneClip, &quot;&quot;),</span>
+<span class="s1">  				o:    (o &gt; 0 ? &quot;-&quot; : &quot;+&quot;) + pad(Math.floor(Math.abs(o) / 60) * 100 + Math.abs(o) % 60, 4),</span>
+<span class="s1">  				S:    [&quot;th&quot;, &quot;st&quot;, &quot;nd&quot;, &quot;rd&quot;][d % 10 &gt; 3 ? 0 : (d % 100 - d % 10 != 10) * d % 10]</span>
+<span class="s1">  			};</span>
+
+<span class="s1">  		return mask.replace(token, function ($0) {</span>
+<span class="s1">  			return $0 in flags ? flags[$0] : $0.slice(1, $0.length - 1);</span>
+<span class="s1">  		});</span>
+<span class="s1">  	};</span>
+<span class="s1">  }();</span>
+
+<span class="s1">  // Some common format strings</span>
+<span class="s1">  dateFormat.masks = {</span>
+<span class="s1">  	&quot;default&quot;:      &quot;ddd mmm dd yyyy HH:MM:ss&quot;,</span>
+<span class="s1">  	shortDate:      &quot;m/d/yy&quot;,</span>
+<span class="s1">  	mediumDate:     &quot;mmm d, yyyy&quot;,</span>
+<span class="s1">  	longDate:       &quot;mmmm d, yyyy&quot;,</span>
+<span class="s1">  	fullDate:       &quot;dddd, mmmm d, yyyy&quot;,</span>
+<span class="s1">  	shortTime:      &quot;h:MM TT&quot;,</span>
+<span class="s1">  	mediumTime:     &quot;h:MM:ss TT&quot;,</span>
+<span class="s1">  	longTime:       &quot;h:MM:ss TT Z&quot;,</span>
+<span class="s1">  	isoDate:        &quot;yyyy-mm-dd&quot;,</span>
+<span class="s1">  	isoTime:        &quot;HH:MM:ss&quot;,</span>
+<span class="s1">  	isoDateTime:    &quot;yyyy-mm-dd&#39;</span><span class="n">T</span><span class="s1">&#39;HH:MM:ss&quot;,</span>
+<span class="s1">  	isoUtcDateTime: &quot;UTC:yyyy-mm-dd&#39;</span><span class="n">T</span><span class="s1">&#39;HH:MM:ss&#39;</span><span class="n">Z</span><span class="err">&#39;</span><span class="s2">&quot;</span>
+<span class="s2">  };</span>
+
+<span class="s2">  // Internationalization strings</span>
+<span class="s2">  dateFormat.i18n = {</span>
+<span class="s2">  	dayNames: [</span>
+<span class="s2">  		&quot;</span><span class="no">Sun</span><span class="s2">&quot;, &quot;</span><span class="no">Mon</span><span class="s2">&quot;, &quot;</span><span class="no">Tue</span><span class="s2">&quot;, &quot;</span><span class="no">Wed</span><span class="s2">&quot;, &quot;</span><span class="no">Thu</span><span class="s2">&quot;, &quot;</span><span class="no">Fri</span><span class="s2">&quot;, &quot;</span><span class="no">Sat</span><span class="s2">&quot;,</span>
+<span class="s2">  		&quot;</span><span class="no">Sunday</span><span class="s2">&quot;, &quot;</span><span class="no">Monday</span><span class="s2">&quot;, &quot;</span><span class="no">Tuesday</span><span class="s2">&quot;, &quot;</span><span class="no">Wednesday</span><span class="s2">&quot;, &quot;</span><span class="no">Thursday</span><span class="s2">&quot;, &quot;</span><span class="no">Friday</span><span class="s2">&quot;, &quot;</span><span class="no">Saturday</span><span class="s2">&quot;</span>
+<span class="s2">  	],</span>
+<span class="s2">  	monthNames: [</span>
+<span class="s2">  		&quot;</span><span class="no">Jan</span><span class="s2">&quot;, &quot;</span><span class="no">Feb</span><span class="s2">&quot;, &quot;</span><span class="no">Mar</span><span class="s2">&quot;, &quot;</span><span class="no">Apr</span><span class="s2">&quot;, &quot;</span><span class="no">May</span><span class="s2">&quot;, &quot;</span><span class="no">Jun</span><span class="s2">&quot;, &quot;</span><span class="no">Jul</span><span class="s2">&quot;, &quot;</span><span class="no">Aug</span><span class="s2">&quot;, &quot;</span><span class="no">Sep</span><span class="s2">&quot;, &quot;</span><span class="no">Oct</span><span class="s2">&quot;, &quot;</span><span class="no">Nov</span><span class="s2">&quot;, &quot;</span><span class="no">Dec</span><span class="s2">&quot;,</span>
+<span class="s2">  		&quot;</span><span class="no">January</span><span class="s2">&quot;, &quot;</span><span class="no">February</span><span class="s2">&quot;, &quot;</span><span class="no">March</span><span class="s2">&quot;, &quot;</span><span class="no">April</span><span class="s2">&quot;, &quot;</span><span class="no">May</span><span class="s2">&quot;, &quot;</span><span class="no">June</span><span class="s2">&quot;, &quot;</span><span class="no">July</span><span class="s2">&quot;, &quot;</span><span class="no">August</span><span class="s2">&quot;, &quot;</span><span class="no">September</span><span class="s2">&quot;, &quot;</span><span class="no">October</span><span class="s2">&quot;, &quot;</span><span class="no">November</span><span class="s2">&quot;, &quot;</span><span class="no">December</span><span class="s2">&quot;</span>
+<span class="s2">  	]</span>
+<span class="s2">  };</span>
+
+<span class="s2">  // For convenience...</span>
+<span class="s2">  if (!Date.prototype.format) {</span>
+<span class="s2">    Date.prototype.format = function (mask, utc) {</span>
+<span class="s2">     return dateFormat(this, mask, utc);</span>
+<span class="s2">    };</span>
+<span class="s2">  }  </span>
+
+<span class="s2">})(jQuery);</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>
