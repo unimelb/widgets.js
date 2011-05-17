@@ -71,7 +71,6 @@
         var publishedDate = new Date(Date.parse(entry.publishedDate));
         html = html.replace(/{publishedDate}/, publishedDate.format(dateFormatMask));
       } catch(ex) {      
-        console.log(ex);
   		  html = html.replace(/{publishedDate}/, "");
       }   
       return html; 
