@@ -48,8 +48,7 @@
         numberOfItems: 11,
         renderer: function(entry, _default) {  
           var img = $(entry.content).filter("img").attr("src");
-          html = _default.replace(/{img}/, img)       
-          return html;
+          return _default.replace(/{img}/, img);
         },
         onComplete: function() {
           $("#feed li:first").addClass("first");
