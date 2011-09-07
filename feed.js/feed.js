@@ -64,14 +64,14 @@
 
 
     var renderer = function(entry) {
-  		var html = template.replace(/{link}/, entry.link);
-  		html = html.replace(/{title}/, entry.title)
-  		html = html.replace(/{content}/, entry.content)
+  		var html = template.replace(/{link}/g, entry.link);
+  		html = html.replace(/{title}/g, entry.title)
+  		html = html.replace(/{content}/g, entry.content)
       try {
         var publishedDate = new Date(Date.parse(entry.publishedDate));
-        html = html.replace(/{publishedDate}/, publishedDate.format(dateFormatMask));
+        html = html.replace(/{publishedDate}/g, publishedDate.format(dateFormatMask));
       } catch(ex) {      
-  		  html = html.replace(/{publishedDate}/, "");
+  		  html = html.replace(/{publishedDate}/g, "");
       }   
       return html; 
     }
